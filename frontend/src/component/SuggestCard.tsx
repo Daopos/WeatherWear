@@ -1,7 +1,6 @@
 import "./SuggestCard.css";
 
 import Gemini from "../assets/gemini.png";
-import GeminiIcon from "../assets/geministart.png";
 import { RotateCcw, Sun, Wind, Cloud, Droplets } from "lucide-react";
 import { useEffect, useRef, useState } from "react";
 import type { CSSProperties } from "react";
