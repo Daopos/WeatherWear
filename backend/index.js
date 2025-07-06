@@ -25,7 +25,7 @@ app.get('/gemini', async (req, res) => {
         const temp = weatherData.current?.temp_c ?? 'unknown temperature';
         const location = weatherData.location?.name ?? 'your area';
 
-        const prompt = `The current weather in ${location} is ${condition.toLowerCase()} with ${temp}°C. Based on this, list 5 simple outfits to wear today. Only give a numbered list with short, clear answers. Do not include explanations, formatting, or extra text.`;
+        const prompt = `The current weather in ${location} is ${condition.toLowerCase()} with ${temp}°C. Based on this, list 8 simple outfits to wear today. Only give a numbered list with short, clear answers. Do not include explanations, formatting, or extra text.`;
 
         const response = await ai.models.generateContentStream({
             model: "gemini-2.0-flash",

@@ -60,3 +60,26 @@ box-shadow: rgba(0, 0, 0, 0.24) 0px 3px 8px;
 .refresh svg {
   vertical-align: middle;
 }
+
+@media only screen and (max-width: 1270px) {
+ .weather-logo {
+  width: 180px;
+}
+.forecast {
+  width: 30px;
+}
+
+.weather-card > h1 {
+  font-size: medium;
+}
+
+.current-container {
+  gap: 20px;
+}
+
+.current-container p {
+  font-size: small;
+}
+
+
+}
