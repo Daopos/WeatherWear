@@ -3,8 +3,35 @@ import "./SuggestCard.css";
 import Gemini from "../assets/gemini.png";
 import GeminiIcon from "../assets/geministart.png";
 import { RotateCcw, Sun, Wind, Cloud, Droplets } from "lucide-react";
+import { useEffect, useRef, useState } from "react";
+import { getSuggestion } from "../services/service";
 
 const SuggestCard = () => {
+  const [suggestions, setSuggestions] = useState<string[]>([]);
+  const [isLoading, setIsLoading] = useState<boolean>(false);
+
+  const hasFetched = useRef(false);
+
+  useEffect(() => {
+    if (!hasFetched.current) {
+      getData();
+      hasFetched.current = true;
+    }
+  }, []);
+
+  const getData = async () => {
+    setIsLoading(true);
+
+    await getSuggestion()
+      .then((data) => {
+        setSuggestions(data.result);
+      })
+      .catch(() => {})
+      .finally(() => {
+        setIsLoading(false);
+      });
+  };
+
   return (
     <div className="suggest-card">
       <button className="refresh">
@@ -14,19 +41,17 @@ const SuggestCard = () => {
       <div className="suggestion-title">
         <h4>Outfit Suggestion by Gemini:</h4>
       </div>
-      <div className="suggestion-box">
-        <ul>
-          <li>Rain boots, leggings, oversized sweater, rain jacket.</li>
-          <li>Waterproof sneakers, jeans, t-shirt, hoodie, trench coat.</li>
-          <li>
-            Chelsea boots, dress pants, button-down shirt, light raincoat.
-          </li>
-          <li>Loafers, midi skirt, turtleneck, cardigan, umbrella.</li>
-          <li>
-            Ankle boots, corduroy pants, long-sleeved shirt, puffer vest, hat.
-          </li>
-        </ul>
-      </div>
+      {isLoading ? (
+        <div>hshs</div>
+      ) : (
+        <div className="suggestion-box">
+          <ul>
+            {suggestions.map((suggestion, i) => (
+              <li key={i}>{`${i + 1}. ${suggestion}`}</li>
+            ))}
+          </ul>
+        </div>
+      )}
     </div>
   );
 };

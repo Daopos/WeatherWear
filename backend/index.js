@@ -1,9 +1,14 @@
 
-const express = require('express')
 require('dotenv').config()
+const express = require('express')
+const cors = require('cors')
 const { GoogleGenAI } = require("@google/genai")
 
+
 const app = express()
+
+app.use(cors());
+app.use(express.json())
 
 const PORT = process.env.URL_PORT || 3000
 
@@ -12,26 +17,38 @@ const weather = process.env.WEATHER_KEY;
 
 
 app.get('/gemini', async (req, res) => {
+    try {
+        const weatherRes = await fetch(`https://api.weatherapi.com/v1/current.json?key=${weather}&q=philippines&aqi=yes`);
+        const weatherData = await weatherRes.json();
 
-    const response = await ai.models.generateContentStream({
-        model: "gemini-2.0-flash",
-        contents: "List 5 simple outfits to wear on a rainy day. Only give a numbered list with short, clear answers. Do not include explanations, formatting, or extra text.",
-    });
+        const condition = weatherData.current?.condition?.text ?? 'unknown weather';
+        const temp = weatherData.current?.temp_c ?? 'unknown temperature';
+        const location = weatherData.location?.name ?? 'your area';
 
+        const prompt = `The current weather in ${location} is ${condition.toLowerCase()} with ${temp}°C. Based on this, list 5 simple outfits to wear today. Only give a numbered list with short, clear answers. Do not include explanations, formatting, or extra text.`;
 
-    let text = '';
+        const response = await ai.models.generateContentStream({
+            model: "gemini-2.0-flash",
+            contents: prompt,
+        });
 
-    for await (const chunk of response) {
-        text += chunk.text ?? '';
+        let text = '';
+        for await (const chunk of response) {
+            text += chunk.text ?? '';
+        }
+
+        const items = text
+            .split(/\n+/)
+            .map(line => line.replace(/^\d+\.\s*/, '').trim())
+            .filter(item => item.length > 0);
+
+        res.status(200).json({ weather: condition, temperature: temp, result: items });
+
+    } catch (err) {
+        console.error('Error generating content:', err);
+        res.status(500).json({ error: 'Something went wrong.' });
     }
-
-    const items = text
-        .split(/\n+/) // split by line breaks
-        .map(line => line.replace(/^\d+\.\s*/, '').trim()) // remove "1. ", "2. ", etc.
-        .filter(item => item.length > 0); // remove empty lines
-
-    res.status(200).json({ result: items });
-})
+});
 
 app.get('/weather', async (req, res) => {
 
