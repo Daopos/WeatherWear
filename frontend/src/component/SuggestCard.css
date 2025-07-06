@@ -1,0 +1,34 @@
+.suggest-card {
+background-color: rgba(57, 59, 90, 0.1); /* 30% opacity */
+grid-column: 3;
+grid-row: 2 /5;
+border-radius: 20px;
+box-shadow: rgba(0, 0, 0, 0.24) 0px 3px 8px;
+position: relative;
+padding: 20px 15px;
+color: #EAEFEF;
+}
+
+
+
+.suggestion-title {
+    display: flex;
+    gap: 5px;
+  
+}
+
+.suggestion-title > h4 {
+    background: linear-gradient(90deg, #4285F4, #9B72CB);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  color: transparent; /* fallback */
+}
+
+.suggestion-box {
+    margin-top: 10px;
+}
+.suggestion-box >ul >li {
+    list-style: none;
+    padding: 10px 5px;
+    border-bottom: 2px dotted  #4285F4;
+}
